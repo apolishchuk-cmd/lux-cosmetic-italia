@@ -67,6 +67,26 @@ html,body{overflow-x:hidden}
   .cat-btn{min-height:92px}
   .product img{height:260px}
 }
+
+/* Catalog interaction fix */
+.cat-btn{
+  appearance:none;
+  -webkit-appearance:none;
+  display:block;
+  font-family:inherit;
+  background:var(--paper);
+  cursor:pointer;
+}
+.cat-btn:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+.products{
+  scroll-margin-top:105px;
+}
+.product-item.hidden{
+  display:none !important;
+}
 </style>
 </head>
 <body>
@@ -226,35 +246,66 @@ html,body{overflow-x:hidden}
 <footer><div class="wrap">© Lux Cosmetic Italia · Москва · Уходовая косметика · Фотографии в макете — Pexels.</div></footer>
 <script>
 (function () {
-  function showCategory(category, button) {
-    if (!category) return;
+  'use strict';
 
-    document.querySelectorAll('.cat-btn').forEach(function (b) {
-      b.classList.toggle('active', b === button);
+  function initCatalog() {
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('.cat-btn'));
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.product-item'));
+    var products = document.querySelector('.products');
+
+    if (!buttons.length || !cards.length) return;
+
+    function showCategory(category, activeButton, shouldScroll) {
+      buttons.forEach(function (button) {
+        var isActive = button === activeButton;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      cards.forEach(function (card) {
+        var visible = card.getAttribute('data-category') === category;
+        card.classList.toggle('hidden', !visible);
+        card.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      });
+
+      if (shouldScroll && products) {
+        var top = products.getBoundingClientRect().top + window.pageYOffset - 105;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+    }
+
+    buttons.forEach(function (button) {
+      button.type = 'button';
+      button.setAttribute('role', 'tab');
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        showCategory(
+          button.getAttribute('data-category'),
+          button,
+          true
+        );
+      });
     });
 
-    document.querySelectorAll('.product-item').forEach(function (card) {
-      card.classList.toggle('hidden', card.getAttribute('data-category') !== category);
-    });
+    // При открытии каталога показываем только «Лицо».
+    var initial = buttons.find(function (button) {
+      return button.classList.contains('active');
+    }) || buttons[0];
+
+    showCategory(
+      initial.getAttribute('data-category'),
+      initial,
+      false
+    );
   }
 
-  function handleCategory(e) {
-    var button = e.target.closest ? e.target.closest('.cat-btn') : null;
-    if (!button) return;
-    e.preventDefault();
-    e.stopPropagation();
-    showCategory(button.getAttribute('data-category'), button);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCatalog);
+  } else {
+    initCatalog();
   }
-
-  document.addEventListener('click', handleCategory, true);
-  document.addEventListener('pointerup', handleCategory, true);
-  document.addEventListener('touchend', handleCategory, {passive:false, capture:true});
-
-  document.querySelectorAll('.cat-btn').forEach(function (button) {
-    button.type = 'button';
-    button.style.touchAction = 'manipulation';
-    button.style.pointerEvents = 'auto';
-  });
 })();
 </script>
 </body>
