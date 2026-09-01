@@ -23,26 +23,20 @@ nav{display:flex;gap:22px;font-size:14px;color:#625b54}nav a{text-decoration:non
 footer{border-top:1px solid var(--line);padding:30px 0;color:#81776e;font-size:12px}
 @media(max-width:850px){nav{display:none}.hero-grid,.story,.contact{grid-template-columns:1fr}.hero-card{min-height:420px}.categories{grid-template-columns:1fr 1fr}.products,.reviews,.audience-grid,.steps{grid-template-columns:1fr}.section{padding:55px 0}.hero{padding-top:45px}.facts{grid-template-columns:1fr}.story img{height:380px}}
 
-/* RESPONSIVE FIX */
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
-body{overflow-x:hidden}
-img{max-width:100%;height:auto;display:block}
-a,button,summary{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+/* MOBILE + DESKTOP FINAL FIX */
+html,body{max-width:100%;overflow-x:hidden}
 button{font-family:inherit}
-.cat-btn{position:relative;z-index:2;cursor:pointer;pointer-events:auto}
-.btn,.product-btn{position:relative;z-index:3;cursor:pointer}
-.product{min-width:0}
-.product img{display:block;width:100%;height:300px;object-fit:cover;background:#e9e0d6}
+.cat-btn{display:block;position:relative;z-index:20;pointer-events:auto;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.cat-btn:focus{outline:2px solid var(--gold);outline-offset:2px}
+.product-btn,.btn{position:relative;z-index:20;touch-action:manipulation}
+.product img{display:block;width:100%;height:300px;object-fit:cover}
 @media(max-width:850px){
- .wrap{padding-left:18px;padding-right:18px}
  .hero-grid,.story,.contact{grid-template-columns:1fr}
- .hero-card{min-height:380px}
  .categories{grid-template-columns:1fr 1fr}
  .products,.reviews,.audience-grid,.steps{grid-template-columns:1fr}
  .facts{grid-template-columns:1fr}
+ .hero-card{min-height:380px}
  .product img{height:300px}
- .product-btn{min-height:46px}
- .story img{height:380px}
 }
 @media(max-width:520px){
  .wrap{padding-left:15px;padding-right:15px}
@@ -51,7 +45,6 @@ button{font-family:inherit}
  .product img{height:260px}
  .story img{height:300px}
 }
-
 </style>
 </head>
 <body>
@@ -71,10 +64,10 @@ button{font-family:inherit}
 <section class="section" id="catalog"><div class="wrap">
   <div class="eyebrow">Коллекция</div><h2>Уход на каждый день</h2><p class="lead">Линейка собрана вокруг самых востребованных задач: увлажнение, питание, комфорт кожи, уход за зоной вокруг глаз, телом и волосами.</p>
   <div class="categories">
-    <button class="cat cat-btn active" data-category="face"><b>Лицо</b><span>Кремы, сыворотки, очищение и маски</span></button>
-    <button class="cat cat-btn" data-category="eyes"><b>Глаза</b><span>Нежный уход за зоной вокруг глаз</span></button>
-    <button class="cat cat-btn" data-category="body"><b>Тело</b><span>Кремы для тела, рук и ног</span></button>
-    <button class="cat cat-btn" data-category="hair"><b>Волосы</b><span>Маски и питательный уход</span></button>
+    <button class="cat cat-btn active" data-category="face" type="button" onclick="showCategory('face');return false;"><b>Лицо</b><span>Кремы, сыворотки, очищение и маски</span></button>
+    <button class="cat cat-btn" data-category="eyes" type="button" onclick="showCategory('eyes');return false;"><b>Глаза</b><span>Нежный уход за зоной вокруг глаз</span></button>
+    <button class="cat cat-btn" data-category="body" type="button" onclick="showCategory('body');return false;"><b>Тело</b><span>Кремы для тела, рук и ног</span></button>
+    <button class="cat cat-btn" data-category="hair" type="button" onclick="showCategory('hair');return false;"><b>Волосы</b><span>Маски и питательный уход</span></button>
   </div>
   <div class="products">
 <article class="product product-item" data-category="face">
@@ -209,30 +202,24 @@ button{font-family:inherit}
 </div></div></section>
 </main>
 <footer><div class="wrap">© Lux Cosmetic Italia · Москва · Уходовая косметика · Фотографии в макете — Pexels.</div></footer>
+
 <script>
-document.querySelectorAll('.cat-btn').forEach(button=>{
- button.addEventListener('click',()=>{
-  const category=button.dataset.category;
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',b===button));
-  document.querySelectorAll('.product-item').forEach(card=>card.classList.toggle('hidden',card.dataset.category!==category));
- });
+function showCategory(category){
+  var buttons=document.querySelectorAll('.cat-btn');
+  var cards=document.querySelectorAll('.product-item');
+
+  for(var i=0;i<buttons.length;i++){
+    buttons[i].classList.toggle('active', buttons[i].getAttribute('data-category')===category);
+  }
+  for(var j=0;j<cards.length;j++){
+    var visible=cards[j].getAttribute('data-category')===category;
+    cards[j].classList.toggle('hidden', !visible);
+    cards[j].style.display=visible ? '' : 'none';
+  }
+}
+document.addEventListener('DOMContentLoaded',function(){
+  showCategory('face');
 });
 </script>
-<script>
-(function(){
-  const fallback='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">'+
-    '<rect width="1200" height="800" fill="#eee6dc"/>'+
-    '<text x="600" y="400" text-anchor="middle" dominant-baseline="middle" '+
-    'font-family="Georgia,serif" font-size="54" fill="#6f6255">LUX COSMETIC ITALIA</text></svg>'
-  );
-  document.querySelectorAll('img').forEach(function(img){
-    img.addEventListener('error',function(){
-      if(this.src!==fallback) this.src=fallback;
-    });
-  });
-})();
-</script>
-
 </body>
 </html>
