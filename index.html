@@ -23,61 +23,33 @@ nav{display:flex;gap:22px;font-size:14px;color:#625b54}nav a{text-decoration:non
 footer{border-top:1px solid var(--line);padding:30px 0;color:#81776e;font-size:12px}
 @media(max-width:850px){nav{display:none}.hero-grid,.story,.contact{grid-template-columns:1fr}.hero-card{min-height:420px}.categories{grid-template-columns:1fr 1fr}.products,.reviews,.audience-grid,.steps{grid-template-columns:1fr}.section{padding:55px 0}.hero{padding-top:45px}.facts{grid-template-columns:1fr}.story img{height:380px}}
 
-/* FINAL RESPONSIVE / TOUCH FIXES */
+/* RESPONSIVE FIX */
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
 body{overflow-x:hidden}
 img{max-width:100%;height:auto;display:block}
 a,button,summary{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button{font-family:inherit}
-.cat-btn{position:relative;z-index:2;cursor:pointer;pointer-events:auto;min-height:135px}
-.btn,.product-btn{position:relative;z-index:3;min-height:46px;cursor:pointer}
+.cat-btn{position:relative;z-index:2;cursor:pointer;pointer-events:auto}
+.btn,.product-btn{position:relative;z-index:3;cursor:pointer}
 .product{min-width:0}
-.product img{width:100%;height:300px;object-fit:cover;object-position:center;background:#e9e0d6}
-.hero-card{background-position:center;background-size:cover}
-@media(min-width:851px){
- .products{grid-template-columns:repeat(3,minmax(0,1fr))}
- .product img{height:320px}
- .hero-card{min-height:560px}
-}
+.product img{display:block;width:100%;height:300px;object-fit:cover;background:#e9e0d6}
 @media(max-width:850px){
  .wrap{padding-left:18px;padding-right:18px}
- .nav{height:68px}
- .logo{font-size:20px}
- .hero{padding:42px 0 38px}
- .hero-grid{grid-template-columns:1fr;gap:28px}
- .hero h1{font-size:clamp(40px,10vw,58px)}
- .hero p{font-size:16px}
- .hero-card{min-height:380px;border-radius:22px}
- .section{padding:52px 0}
- .section h2{font-size:38px}
- .categories{grid-template-columns:1fr 1fr;gap:12px}
- .cat{min-height:120px;padding:20px 17px;border-radius:16px}
- .cat b{font-size:22px}
- .products{grid-template-columns:1fr;gap:16px}
- .product{border-radius:19px}
- .product img{height:300px}
- .product-body{padding:19px}
- .product h3{font-size:24px}
- .product-btn{width:100%;margin-top:14px}
- .story,.contact{grid-template-columns:1fr}
- .story img{height:380px;border-radius:21px}
- .audience-grid,.reviews,.steps{grid-template-columns:1fr}
+ .hero-grid,.story,.contact{grid-template-columns:1fr}
+ .hero-card{min-height:380px}
+ .categories{grid-template-columns:1fr 1fr}
+ .products,.reviews,.audience-grid,.steps{grid-template-columns:1fr}
  .facts{grid-template-columns:1fr}
- .contact-card{padding:24px}
- .email{overflow-wrap:anywhere}
- .socials{flex-wrap:wrap}
+ .product img{height:300px}
+ .product-btn{min-height:46px}
+ .story img{height:380px}
 }
 @media(max-width:520px){
  .wrap{padding-left:15px;padding-right:15px}
  .categories{grid-template-columns:1fr}
  .cat{min-height:92px}
- .hero-card{min-height:300px}
  .product img{height:260px}
  .story img{height:300px}
- .section h2{font-size:34px}
-}
-@media(hover:none){
- .cat-btn:active,.btn:active{transform:scale(.985)}
 }
 
 </style>
@@ -248,18 +220,17 @@ document.querySelectorAll('.cat-btn').forEach(button=>{
 </script>
 <script>
 (function(){
- const fallback='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">'+
-  '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'+
-  '<stop offset="0" stop-color="#f5eee5"/><stop offset="1" stop-color="#d8c3aa"/>'+
-  '</linearGradient></defs><rect width="1200" height="800" fill="url(#g)"/>'+
-  '<text x="600" y="400" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif" font-size="54" fill="#6f6255">LUX COSMETIC ITALIA</text></svg>'
- );
- document.querySelectorAll('img').forEach(function(img){
-  img.addEventListener('error',function(){
-   if(this.src!==fallback)this.src=fallback;
+  const fallback='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">'+
+    '<rect width="1200" height="800" fill="#eee6dc"/>'+
+    '<text x="600" y="400" text-anchor="middle" dominant-baseline="middle" '+
+    'font-family="Georgia,serif" font-size="54" fill="#6f6255">LUX COSMETIC ITALIA</text></svg>'
+  );
+  document.querySelectorAll('img').forEach(function(img){
+    img.addEventListener('error',function(){
+      if(this.src!==fallback) this.src=fallback;
+    });
   });
- });
 })();
 </script>
 
